@@ -8,7 +8,7 @@ It enforces that all variables should have the same "bla" name :)
 Install dependencies and run eslint to see it in action.
 
 ```
-yarn install
+npm i
 
-yarn lint
+npm lint
 ```
