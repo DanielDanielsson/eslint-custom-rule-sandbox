@@ -5,6 +5,8 @@ module.exports = {
   rules: {
     'example/foo-bar-rule': 'error',
     'example/sort-interface': 'error',
+    'example/sort-type': 'error',
+    'example/sort-enum': 'error',
     'prefer-arrow-callback': 'error',
     "func-style": ["error", "expression", { "allowArrowFunctions": true }],
     

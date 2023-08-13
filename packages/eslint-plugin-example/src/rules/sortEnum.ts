@@ -1,5 +1,4 @@
 import { JSONSchema4 } from '@typescript-eslint/utils/json-schema';
-
 import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
 import { createReporter } from './utils/plugin';
 import { createRule, RuleMetaData } from './utils/rule';
@@ -11,13 +10,12 @@ import {
   SortingParamsOptions,
 } from './common/options';
 
-const getObjectBody = (node: TSESTree.TSInterfaceDeclaration) =>
-  node.type === AST_NODE_TYPES.TSInterfaceDeclaration && node.body.body;
-
+const getObjectBody = (node: TSESTree.TSEnumDeclaration) =>
+  AST_NODE_TYPES.TSEnumDeclaration && node.members;
 /**
  * The name of this rule.
  */
-export const name = 'interface' as const;
+export const name = 'type' as const;
 
 type SortingParams = SortingParamsOptions['caseSensitive'] &
   SortingParamsOptions['natural'] &
@@ -63,22 +61,17 @@ const defaultOptions: Options = [
 ];
 
 /**
- * The possible error messages.
- */
-const errorMessages = {
-  invalidOrder: ErrorMessage.InterfaceInvalidOrder,
-} as const;
-
-/**
  * The meta data for this rule.
  */
-const meta: RuleMetaData<keyof typeof errorMessages> = {
+const meta: RuleMetaData<'invalidOrder'> = {
   type: 'suggestion',
   docs: {
-    description: 'require interface keys to be sorted',
+    description: 'require type keys to be sorted',
     recommended: 'recommended',
   },
-  messages: errorMessages,
+  messages: {
+    invalidOrder: ErrorMessage.StringEnumInvalidOrder,
+  },
   fixable: 'code',
   schema,
 };
@@ -86,7 +79,7 @@ const meta: RuleMetaData<keyof typeof errorMessages> = {
 /**
  * Create the rule.
  */
-export const sortInterface = createRule<keyof typeof errorMessages, Options>({
+export const sortEnum = createRule<'invalidOrder', Options>({
   name,
   meta,
   defaultOptions,
@@ -98,7 +91,7 @@ export const sortInterface = createRule<keyof typeof errorMessages, Options>({
     }));
 
     return {
-      TSInterfaceDeclaration(node) {
+      TSEnumDeclaration(node) {
         const body = getObjectBody(node);
 
         return compareNodeListAndReport(body);
