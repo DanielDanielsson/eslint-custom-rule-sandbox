@@ -15,7 +15,7 @@ const myObjext = {
     d: "Hello", b: "World", c: "!"
 }
 interface MyInterface {
+    a: string,
     b: string,
-    c: string,
-    d: string
+    c: string
 }
