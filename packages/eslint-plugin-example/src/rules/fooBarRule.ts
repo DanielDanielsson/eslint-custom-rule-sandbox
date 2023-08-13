@@ -1,19 +1,22 @@
-
+import { TSESLint, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 type MessageIds = 'messageIdForSomeFailure' | 'messageIdForSomeOtherFailure';
 
-export const fooBarRule = {
+const myRule: TSESLint.RuleModule<MessageIds> = {
   defaultOptions: [],
   meta: {
     type: 'suggestion',
     messages: {
-      messageIdForSomeFailure: 'Error - You cannot use foo!',
-      messageIdForSomeOtherFailure: 'Error - You cannot use bar!',
+      messageIdForSomeFailure: 'Error message for some failure',
+      messageIdForSomeOtherFailure: 'Error message for some other failure',
     },
     schema: [], // no options
   },
   create: context => ({
     CallExpression: node => {
+      if (node.callee.type !== AST_NODE_TYPES.Identifier) {
+        return;
+      }
 
       if (node.callee.name === 'foo') {
         return context.report({
@@ -32,3 +35,5 @@ export const fooBarRule = {
     },
   }),
 };
+
+export default myRule;
