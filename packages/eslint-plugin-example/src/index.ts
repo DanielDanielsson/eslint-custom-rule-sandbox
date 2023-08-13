@@ -1,12 +1,9 @@
-import {myFirstRule} from './rules/my-first-rule';
-import { fooBarRule }  from './rules/fooBarRule';
-import {sortKeys} from './rules/sortKeys';
-import {sortInterface} from './rules/sortInterface';
+/* eslint-disable import/no-default-export */
+import { fooBarRule } from './rules/fooBarRule';
+import { sortInterface } from './rules/sortInterface';
 
 const rules = {
-  'my-first-rule': myFirstRule,
   'foo-bar-rule': fooBarRule,
-  'sort-keys': sortKeys,
   'sort-interface': sortInterface,
 };
 

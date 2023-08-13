@@ -12,26 +12,24 @@ export const fooBarRule: TSESLint.RuleModule<MessageIds> = {
     },
     schema: [], // no options
   },
-  create: context => ({
-    CallExpression: node => {
+  create: (context) => ({
+    CallExpression: (node) => {
       if (node.callee.type !== AST_NODE_TYPES.Identifier) {
         return;
       }
 
       if (node.callee.name === 'foo') {
-        return context.report({
+        context.report({
           node: node.callee,
           messageId: 'messageIdForSomeFailure',
         });
       }
       if (node.callee.name === 'bar') {
-        return context.report({
+        context.report({
           node: node.callee,
           messageId: 'messageIdForSomeOtherFailure',
         });
       }
-
-      return;
     },
   }),
 };
