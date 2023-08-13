@@ -4,5 +4,7 @@ module.exports = {
   rules: {
     // 'example/my-first-rule': 'error',
     'example/foo-bar-rule': 'error',
+    // 'example/sort-keys': 'error',
+    'example/sort-interface': 'error',
   }
 };
