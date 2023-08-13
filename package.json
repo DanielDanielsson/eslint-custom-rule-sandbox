@@ -15,5 +15,8 @@
   },
   "workspaces": [
     "packages/**"
-  ]
+  ],
+  "overrides": {
+    "@typescript-eslint/typescript-estree": "^6.3.0"
+  }
 }
