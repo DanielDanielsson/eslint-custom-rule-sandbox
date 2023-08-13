@@ -1,5 +1,5 @@
-import { JSONSchema4 } from 'json-schema'
-import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/experimental-utils'
+import {JSONSchema4} from '@typescript-eslint/utils/json-schema'
+import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils'
 
 import { getObjectBody } from './utils/ast'
 import { createReporter } from './utils/plugin'
@@ -64,9 +64,8 @@ const errorMessages = {
 const meta: RuleMetaData<keyof typeof errorMessages> = {
   type: 'suggestion',
   docs: {
-    category: 'Best Practices',
     description: 'require string enum members to be sorted',
-    recommended: 'warn',
+    recommended: 'recommended',
   },
   messages: errorMessages,
   fixable: 'code',

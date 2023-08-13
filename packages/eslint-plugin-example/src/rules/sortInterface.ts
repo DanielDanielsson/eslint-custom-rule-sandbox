@@ -1,4 +1,4 @@
-import { JSONSchema4 } from 'json-schema'
+import {JSONSchema4} from '@typescript-eslint/utils/json-schema'
 
 import { createReporter } from './utils/plugin'
 import { createRule, RuleMetaData } from './utils/rule'
@@ -10,7 +10,7 @@ import {
   SortingParamsOptions,
 } from './common/options'
 
-import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/experimental-utils'
+import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils'
 
 
 const getObjectBody = (
@@ -85,8 +85,7 @@ const meta: RuleMetaData<keyof typeof errorMessages> = {
   type: 'suggestion',
   docs: {
     description: 'require interface keys to be sorted',
-    recommended: 'warn',
-    category: 'Best Practices',
+    recommended: 'recommended',
   },
   messages: errorMessages,
   fixable: 'code',

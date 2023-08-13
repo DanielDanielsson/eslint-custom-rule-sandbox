@@ -11,13 +11,9 @@ foo()
 bar()
 fooBar()
 
-
-
 const myObjext = {
     d: "Hello", b: "World", c: "!"
 }
-
-
 interface MyInterface {
     b: string,
     c: string,

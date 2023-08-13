@@ -1,10 +1,10 @@
-import { TSESTree, AST_TOKEN_TYPES } from '@typescript-eslint/experimental-utils'
+import { TSESTree, AST_TOKEN_TYPES } from '@typescript-eslint/utils'
 import {
   RuleContext as UtilRuleContext,
   RuleFixer,
   RuleFix,
   SourceCode,
-} from '@typescript-eslint/experimental-utils/dist/ts-eslint'
+} from '@typescript-eslint/utils/ts-eslint'
 import assert from 'assert'
 
 import { SortingOrder } from '../common/options'
@@ -79,7 +79,7 @@ function createNodeSwapper(context: UtilRuleContext<string, RuleOptions>) {
 
   return (
     fixer: RuleFixer,
-    nodePositions: Map<TSType, { initial: number; final: number }>,
+    nodePositions: Map<TSType, { final: number, initial: number; }>,
     currentNode: TSType,
     replaceNode: TSType,
   ) =>

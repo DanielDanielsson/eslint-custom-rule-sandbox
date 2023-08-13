@@ -1,4 +1,4 @@
-import { ESLintUtils } from '@typescript-eslint/experimental-utils'
+import { ESLintUtils } from '@typescript-eslint/utils'
 import {
   ReportDescriptor,
   RuleContext as UtilRuleContext,
@@ -6,7 +6,7 @@ import {
   RuleMetaData as UtilRuleMetaData,
   RuleMetaDataDocs as UtilRuleMetaDataDocs,
   RuleModule,
-} from '@typescript-eslint/experimental-utils/dist/ts-eslint'
+} from '@typescript-eslint/utils/ts-eslint'
 
 export type BaseOptions = readonly unknown[]
 
@@ -31,13 +31,13 @@ type Mutable<T> = {
  * Create a rule.
  */
 export function createRule<MessageIds extends string, Options extends BaseOptions>(data: {
-  readonly name: string
-  readonly meta: RuleMetaData<MessageIds>
-  readonly defaultOptions: Options
   readonly create: (
     context: UtilRuleContext<MessageIds, Options>,
     optionsWithDefault: Mutable<Options>,
-  ) => RuleListener
+  ) => RuleListener,
+  readonly defaultOptions: Options,
+  readonly meta: RuleMetaData<MessageIds>,
+  readonly name: string
 }): RuleModule<MessageIds, Options, RuleListener> {
   return ESLintUtils.RuleCreator(
     name =>

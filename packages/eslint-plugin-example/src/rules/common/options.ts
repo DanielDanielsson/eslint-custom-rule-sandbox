@@ -1,4 +1,4 @@
-import { JSONSchema4 } from 'json-schema'
+import {JSONSchema4} from '@typescript-eslint/utils/json-schema'
 
 export enum SortingOrder {
   Ascending = 'asc',
@@ -6,6 +6,7 @@ export enum SortingOrder {
 }
 
 export const sortingOrderOptionSchema: JSONSchema4 = {
+  type: 'string',
   enum: [SortingOrder.Ascending, SortingOrder.Descending],
 }
 

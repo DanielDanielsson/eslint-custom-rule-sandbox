@@ -1,7 +1,5 @@
 import { Rule } from 'eslint';
 
-
-
 export const myFirstRule: Rule.RuleModule = {
     meta: {
         docs: {
