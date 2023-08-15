@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 
 import React from 'react';
@@ -44,12 +46,12 @@ export enum MyEnum {
 }
 
 // TODO: generate error on this line, sort
-export const MyComponent = ({ b, a, c, d }: MyComponentProps) => {
-  console.log('a', a);
-  console.log('b', b);
-  console.log('c', c);
-  console.log('d', d);
-  // console.log('astcomponent', astcomponent);
 
-  return <div>MyComponent</div>;
-};
+export const MyComponent = ({
+  b = 'default',
+  a = 'default',
+  c = 'default',
+  d = 'default',
+}: MyComponentProps) => null;
+
+//

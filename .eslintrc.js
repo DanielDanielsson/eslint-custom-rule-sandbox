@@ -7,6 +7,7 @@ module.exports = {
     'example/sort-interface': 'error',
     'example/sort-type': 'error',
     'example/sort-enum': 'error',
+    'example/sort-default-props': 'error',
     'prefer-arrow-callback': 'error',
     "func-style": ["error", "expression", { "allowArrowFunctions": true }],
     
