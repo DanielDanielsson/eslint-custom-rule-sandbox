@@ -1,7 +1,7 @@
 import { JSONSchema4 } from '@typescript-eslint/utils/json-schema';
 
 import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
-import { createReporter } from './utils/plugin';
+import { createSortReporter } from './utils/plugin';
 import { createRule, RuleMetaData } from './utils/rule';
 import {
   sortingOrderOptionSchema,
@@ -92,7 +92,7 @@ export const sortInterface = createRule<keyof typeof errorMessages, Options>({
   defaultOptions,
 
   create(context) {
-    const compareNodeListAndReport = createReporter(context, ({ loc }) => ({
+    const compareNodeListAndReport = createSortReporter(context, ({ loc }) => ({
       loc,
       messageId: 'invalidOrder',
     }));

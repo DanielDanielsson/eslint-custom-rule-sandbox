@@ -74,7 +74,7 @@ const getProperty = (node: TSESTree.Node) => {
  *     let a = {[`${b}`]: 1}     // => undefined
  */
 export const getPropertyName = (
-  node: TSESTree.TypeElement | TSESTree.TSEnumMember,
+  node: TSESTree.TypeElement | TSESTree.TSEnumMember | TSESTree.Parameter,
 ) => {
   const property = getProperty(node);
 
@@ -95,7 +95,7 @@ export const getPropertyName = (
 };
 
 export const getPropertyIsOptional = (
-  node: TSESTree.TypeElement | TSESTree.TSEnumMember,
+  node: TSESTree.TypeElement | TSESTree.TSEnumMember | TSESTree.Parameter,
 ) => {
   switch (node.type) {
     case AST_NODE_TYPES.TSMethodSignature:

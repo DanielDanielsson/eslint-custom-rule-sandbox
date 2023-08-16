@@ -16,7 +16,7 @@ import { compareFn } from './compare';
 
 type RuleOptions = InterfaceRuleOptions & StringEnumRuleOptions;
 
-type TSType = TSESTree.TypeElement | TSESTree.TSEnumMember; // | TSESTree.Parameter;
+type TSType = TSESTree.TypeElement | TSESTree.TSEnumMember | TSESTree.Parameter; // | TSESTree.Parameter;
 
 const createNodeSwapper = (context: UtilRuleContext<string, RuleOptions>) => {
   const sourceCode = context.getSourceCode() as SourceCode & {
@@ -143,7 +143,7 @@ const createNodeSwapper = (context: UtilRuleContext<string, RuleOptions>) => {
     }, []);
 };
 
-export const createReporter = <MessageIds extends string>(
+export const createSortReporter = <MessageIds extends string>(
   context: UtilRuleContext<MessageIds, RuleOptions>,
   createReportObject: (node: TSESTree.Node) => {
     readonly loc: TSESTree.SourceLocation;

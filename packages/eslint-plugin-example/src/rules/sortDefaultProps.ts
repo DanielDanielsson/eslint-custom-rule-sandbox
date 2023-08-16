@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { JSONSchema4 } from '@typescript-eslint/utils/json-schema';
 import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
-import { createReporter } from './utils/plugin';
+import { createSortReporter } from './utils/plugin';
 import { createRule, RuleMetaData } from './utils/rule';
 import {
   sortingOrderOptionSchema,
@@ -11,7 +13,7 @@ import {
 } from './common/options';
 
 const getObjectBody = (node: TSESTree.ArrowFunctionExpression) =>
-  node.type === AST_NODE_TYPES.ArrowFunctionExpression && node.params
+  node.type === AST_NODE_TYPES.ArrowFunctionExpression && node.params;
 
 /**
  * The name of this rule.
@@ -86,24 +88,73 @@ export const sortDefaultProps = createRule<'invalidOrder', Options>({
   defaultOptions,
 
   create(context) {
-    const compareNodeListAndReport = createReporter(context, ({ loc }) => ({
-      loc,
-      messageId: 'invalidOrder',
-    }));
-
     return {
-      TSArrowFunctionExpression(node) {
+      ArrowFunctionExpression(node) {
+        if (node.params.length <= 1) {
+          return;
+        }
 
-        // pass parameters of the arrowfunction to compareNodeListAndReport function. Make sure to pass the correct type of parameters and add that type to TStypes in plugin.ts
+        const params = node.params.map((param) => {
+          if (param.type === 'AssignmentPattern') {
+            return param.left.name;
+          }
+          return param.name;
+        });
 
-        const body = getObjectBody(node);
+        const sortedParams = [...params].sort();
 
-        console.log('body', body);
+        if (params.join(',') !== sortedParams.join(',')) {
+          context.report({
+            node,
+            message: 'Arrow function parameters should be sorted.',
+            fix(fixer) {
+              const sourceCode = context.getSourceCode();
 
-        return null;
+              const paramTokens = node.params.map((param) => {
+                if (param.type === 'AssignmentPattern') {
+                  return sourceCode.getTokenBefore(param.left);
+                }
+                return sourceCode.getTokenBefore(param);
+              });
 
-        // return compareNodeListAndReport(body);
+              const firstParamToken = paramTokens[0];
+
+              const replacements = sortedParams.map((param, index) => {
+                const paramToken = paramTokens[index];
+                return fixer.replaceTextRange(
+                  [paramToken.range[0], paramToken.range[1]],
+                  param,
+                );
+              });
+
+              return [
+                fixer.replaceTextRange(
+                  [firstParamToken.range[0], firstParamToken.range[1]],
+                  '',
+                ),
+                ...replacements,
+              ];
+            },
+          });
+        }
       },
     };
   },
+  // const compareNodeListAndReport = createSortReporter(context, ({ loc }) => ({
+  //   loc,
+  //   messageId: 'invalidOrder',
+  // }));
+
+  // return {
+  //   TSArrowFunctionExpression(node) {
+  //     // pass parameters of the arrowfunction to compareNodeListAndReport function. Make sure to pass the correct type of parameters and add that type to TStypes in plugin.ts
+
+  //     const body = getObjectBody(node);
+
+  //     return compareNodeListAndReport(body);
+  //   },
+  //       }
+  //     },
+  //   };
+  // },
 });

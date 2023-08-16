@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
@@ -30,6 +31,9 @@ export interface MyComponentProps {
   b?: string;
   c?: string;
   d?: string;
+  e?: string;
+  f?: string;
+  g?: string;
 }
 
 export type MyType = {
@@ -48,10 +52,11 @@ export enum MyEnum {
 // TODO: generate error on this line, sort
 
 export const MyComponent = ({
-  b = 'default',
-  a = 'default',
   c = 'default',
+  b = 'default',
   d = 'default',
+  a = 'default',
+  f = 'default',
+  e = 'default',
+  g = 'default',
 }: MyComponentProps) => null;
-
-//
