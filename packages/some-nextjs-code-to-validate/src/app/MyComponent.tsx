@@ -26,16 +26,6 @@ console.log('__________________');
 
 // console.log('astcomponent', astcomponent);
 
-export interface MyComponentProps {
-  a?: string;
-  b?: string;
-  c?: string;
-  d?: string;
-  e?: string;
-  f?: string;
-  g?: string;
-}
-
 export type MyType = {
   blonde: string;
   funny: string;
@@ -49,14 +39,28 @@ export enum MyEnum {
   c = 'c',
 }
 
-// TODO: generate error on this line, sort
+export interface MyComponentProps {
+  a?: string;
+  b?: string;
+  c?: string;
+  d?: string;
+  e?: string;
+  f?: string;
+  g?: string;
+}
 
 export const MyComponent = ({
   c = 'default',
   b = 'default',
-  d = 'default',
   a = 'default',
+  d = 'default',
   f = 'default',
   e = 'default',
   g = 'default',
 }: MyComponentProps) => null;
+
+const tempArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+
+// const fixes = tempArray.map((index, a) => console.log(index, a));
+
+// export const MyComponent2 = (c: string, b: string, a: string) => null;

@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "lint": "eslint --ext .ts,.tsx .",
-    "lint:fix": "eslint --ext .ts,.tsx . --fix"
+    "lint:fix": "eslint --ext .ts,.tsx . --fix",
+    "lint:mycomponent": "eslint --ext .ts,.tsx ./packages/some-nextjs-code-to-validate/src/app/mycomponent.tsx --fix"
   },
   "dependencies": {
     "@types/eslint": "^8.44.2",
