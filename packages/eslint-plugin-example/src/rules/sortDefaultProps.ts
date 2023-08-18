@@ -5,7 +5,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { JSONSchema4 } from '@typescript-eslint/utils/json-schema';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
-// import { createSortReporter } from './utils/plugin';
 import { createRule, RuleMetaData } from './utils/rule';
 import {
   sortingOrderOptionSchema,
@@ -82,82 +81,6 @@ const meta: RuleMetaData<'invalidOrder'> = {
   schema,
 };
 
-/**
- * Create the rule.
- */
-// export const sortDefaultProps = createRule<'invalidOrder', Options>({
-//   name,
-//   meta,
-//   defaultOptions,
-
-//   create(context) {
-//     return {
-//       ArrowFunctionExpression(node) {
-//         if (node.params.length <= 1) {
-//           return;
-//         }
-
-//         const params = node.params.map((param) => {
-//           if (param.type === AST_NODE_TYPES.AssignmentPattern) {
-//             return param.left;
-//           }
-
-//           if (param.type === AST_NODE_TYPES.ObjectPattern) {
-//             return param.properties;
-//           }
-//           // return param.left;
-//           return null;
-//         });
-
-//         const sortedParams = [...params].sort();
-
-//         if (params.join(',') !== sortedParams.join(',')) {
-//           context.report({
-//             node,
-//             messageId: 'invalidOrder',
-//           });
-//         }
-//       },
-//     };
-//   },
-// });
-
-// This one works with map functions!!
-// export const sortDefaultProps = createRule<'invalidOrder', Options>({
-//   name,
-//   meta,
-//   defaultOptions,
-
-//   create(context) {
-//     return {
-//       ArrowFunctionExpression(node) {
-//         if (node.params.length > 1) {
-//           const paramNames = node.params
-//             .filter((param) => param.type === 'Identifier')
-//             .map((param: any) => param.name);
-
-//           const sortedParamNames = [...paramNames].sort();
-
-//           if (JSON.stringify(paramNames) !== JSON.stringify(sortedParamNames)) {
-//             context.report({
-//               node,
-//               messageId: 'invalidOrder',
-//               fix(fixer) {
-//                 const fixes = sortedParamNames.map((paramName, index) => {
-//                   const paramNode = node.params[index];
-//                   return fixer.replaceText(paramNode, paramName);
-//                 });
-
-//                 return fixes;
-//               },
-//             });
-//           }
-//         }
-//       },
-//     };
-//   },
-// });
-
 export const sortDefaultProps = createRule<'invalidOrder', Options>({
   name,
   meta,
@@ -166,44 +89,22 @@ export const sortDefaultProps = createRule<'invalidOrder', Options>({
   create(context) {
     const checkOrder = (node, params) => {
       if (params.length > 0) {
-        // this was the issue (> 1, object has just >= 1 )
-        // const paramNames = params
-        //   .filter((param) => param.type === 'Identifier')
-        //   .map((param) => param.name);
-
         const propertyNames = [];
-
-        console.log('Arr node', node);
 
         params.forEach((property) => {
           if (property.type === 'Identifier') {
-            // console.log('Found Identifier');
             propertyNames.push(property.name);
           }
           if (property.type === AST_NODE_TYPES.ObjectPattern) {
-            console.log('Found ObjectPattern');
+            property.properties.forEach((subProperty) => {
+              if (
+                subProperty.type === 'Property' &&
+                subProperty.key.type === 'Identifier'
+              ) {
+                propertyNames.push(subProperty.key.name);
+              }
+            });
           }
-
-          if (property.type === AST_NODE_TYPES.AssignmentPattern) {
-            console.log('Found Assignment pattern');
-          }
-
-          if (property.type === AST_NODE_TYPES.TSParameterProperty) {
-            console.log('Found TSParameterProperty');
-          }
-
-          // if (property.type === 'Property' && property.key) {
-          //    else if (property.key.type === 'ObjectPattern') {
-          //     property.key.properties.forEach((subProperty) => {
-          //       if (
-          //         subProperty.type === 'Property' &&
-          //         subProperty.key.type === 'Identifier'
-          //       ) {
-          //         propertyNames.push(subProperty.key.name);
-          //       }
-          //     });
-          //   }
-          // }
         });
 
         const sortedParamNames = [...propertyNames].sort();
@@ -214,100 +115,25 @@ export const sortDefaultProps = createRule<'invalidOrder', Options>({
           context.report({
             node,
             messageId: 'invalidOrder',
-            // fix(fixer) {
-            //   const fixes = sortedParamNames.map((index, paramName) => {
-            //     const paramNode = params[index];
-            //     return fixer.replaceText(paramNode, paramName as any);
-            //   });
-
-            //   return fixes;
-            // },
           });
         }
       }
     };
 
-    // console.log('node', node);
-
     return {
-      // console.log('node', node);
-      // TSDeclareFunction(node) {
-      // console.log('Found TSDeclareFunction');
-      // console.log('node', node);
-      // checkOrder(node, node.params);
-      // },
-
       ArrowFunctionExpression(node) {
-        console.log('Found ArrowFunctionExpression');
-        console.log('node', node);
         checkOrder(node, node.params);
       },
-
-      // TSFunctionSignatureBase(node) {
-      // console.log('Found TSFunctionSignatureBase');
-      // console.log('node', node);
-      // checkOrder(node, node);
-      // },
-      // FunctionDeclaration(node) {
-      //   checkOrder(node, node.params);
-      // },
-
-      // FunctionExpression(node) {
-      //   if (node.params.length === 0) {
-      //     return;
-      //   }
-      //   const lastParam = node.params[node.params.length - 1];
-      //   if (lastParam.type === 'ObjectPattern' && lastParam.properties) {
-      //     checkOrder(node, lastParam.properties);
-      //   }
-      // },
     };
   },
 });
 
-// const compareNodeListAndReport = createSortReporter(context, ({ loc }) => ({
-//   loc,
-//   messageId: 'invalidOrder',
-// }));
-
-// return {
-//   TSArrowFunctionExpression(node) {
-//     // pass parameters of the arrowfunction to compareNodeListAndReport function. Make sure to pass the correct type of parameters and add that type to TStypes in plugin.ts
-
-//     const body = getObjectBody(node);
-
-//     return compareNodeListAndReport(body);
-//   },
-//       }
-//     },
-//   };
-// },
-
 // fix(fixer) {
-//   const sourceCode = context.getSourceCode();
-
-//   const paramTokens = node.params.map((param) => {
-//     if (param.type === "AssignmentPattern") {
-//       return sourceCode.getTokenBefore(param.left);
-//     }
-//     return sourceCode.getTokenBefore(param);
+//   const fixes = sortedParamNames.map((index, paramName) => {
+//     const paramNode = params[index];
+//     // return fixer.replaceText(paramNode, paramName as any);
+//     return fixer.replaceText(paramNode, paramName as any);
 //   });
 
-//   const firstParamToken = paramTokens[0];
-
-//   const replacements = sortedParams.map((param, index) => {
-//     const paramToken = paramTokens[index];
-//     return fixer.replaceTextRange(
-//       [paramToken.range[0], paramToken.range[1]],
-//       param
-//     );
-//   });
-
-//   return [
-//     fixer.replaceTextRange(
-//       [firstParamToken.range[0], firstParamToken.range[1]],
-//       ""
-//     ),
-//     ...replacements,
-//   ];
+//   return fixes;
 // },
