@@ -8,7 +8,6 @@ import {
   SourceCode,
 } from '@typescript-eslint/utils/ts-eslint';
 
-import { TSNode } from '@typescript-eslint/typescript-estree';
 import { SortingOrder } from '../common/options';
 import { Options as InterfaceRuleOptions } from '../sortInterface';
 import { Options as StringEnumRuleOptions } from '../string-enum';
@@ -17,7 +16,7 @@ import { compareFn } from './compare';
 
 type RuleOptions = InterfaceRuleOptions & StringEnumRuleOptions;
 
-type TSType = TSESTree.TypeElement | TSESTree.TSEnumMember | TSESTree.Parameter; 
+type TSType = TSESTree.TypeElement | TSESTree.TSEnumMember | TSESTree.Property;
 
 const createNodeSwapper = (context: UtilRuleContext<string, RuleOptions>) => {
   const sourceCode = context.getSourceCode() as SourceCode & {
@@ -84,9 +83,9 @@ const createNodeSwapper = (context: UtilRuleContext<string, RuleOptions>) => {
   };
 
   return (
-    currentNode: TSType,
     fixer: RuleFixer,
     nodePositions: Map<TSType, { final: number; initial: number }>,
+    currentNode: TSType,
     replaceNode: TSType,
   ) =>
     [currentNode, replaceNode].reduce<RuleFix[]>((acc, node) => {
@@ -151,13 +150,12 @@ export const createSortReporter = <MessageIds extends string>(
     readonly messageId: MessageIds;
   },
 ) => {
-  // Parse options.
   const order = context.options[0] || SortingOrder.Ascending;
   const options = context.options[1];
   const isAscending = order === SortingOrder.Ascending;
-  const isInsensitive = (options && options.caseSensitive) === false;
-  const isNatural = Boolean(options && options.natural);
-  const isRequiredFirst = (options && options.requiredFirst) === true;
+  const isInsensitive = !(options && options.caseSensitive);
+  const isNatural = Boolean(options?.natural);
+  const isRequiredFirst = Boolean(options?.requiredFirst);
 
   const compare = compareFn(isAscending, isInsensitive, isNatural);
   const swapNodes = createNodeSwapper(context);
@@ -206,7 +204,6 @@ export const createSortReporter = <MessageIds extends string>(
         const replaceNode = body[targetPosition];
         const { loc, messageId } = createReportObject(currentNode);
 
-        // Sanity check
         assert(
           loc,
           'createReportObject return value must include a node location',
@@ -229,13 +226,13 @@ export const createSortReporter = <MessageIds extends string>(
             requiredFirst: isRequiredFirst ? 'required first ' : '',
           },
 
-          // fix: (fixer) => {
-          //   if (currentNode !== replaceNode) {
-          //     return swapNodes(fixer, nodePositions, currentNode, replaceNode);
-          //   }
+          fix: (fixer) => {
+            if (currentNode !== replaceNode) {
+              return swapNodes(fixer, nodePositions, currentNode, replaceNode);
+            }
 
-          //   return null;
-          // },
+            return null;
+          },
         });
       }
     }

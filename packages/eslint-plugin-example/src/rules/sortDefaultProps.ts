@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { JSONSchema4 } from '@typescript-eslint/utils/json-schema';
-import { AST_NODE_TYPES } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, TSESTree } from '@typescript-eslint/utils';
 import { createRule, RuleMetaData } from './utils/rule';
 import {
   sortingOrderOptionSchema,
@@ -13,9 +13,10 @@ import {
   SortingOrderOption,
   SortingParamsOptions,
 } from './common/options';
+import { createSortReporter } from './utils/plugin';
 
-// const getObjectBody = (node: TSESTree.ArrowFunctionExpression) =>
-//   node.type === AST_NODE_TYPES.ArrowFunctionExpression && node.params;
+const getObjectBody = (node: TSESTree.ArrowFunctionExpression) =>
+  node.type === AST_NODE_TYPES.ArrowFunctionExpression && node.params;
 
 /**
  * The name of this rule.
@@ -81,59 +82,42 @@ const meta: RuleMetaData<'invalidOrder'> = {
   schema,
 };
 
+/**
+ * Create the rule.
+ */
 export const sortDefaultProps = createRule<'invalidOrder', Options>({
   name,
   meta,
   defaultOptions,
 
   create(context) {
-    const checkOrder = (node, params) => {
-      if (params.length > 0) {
-        const propertyNames = [];
-
-        params.forEach((property) => {
-          if (property.type === 'Identifier') {
-            propertyNames.push(property.name);
-          }
-          if (property.type === AST_NODE_TYPES.ObjectPattern) {
-            property.properties.forEach((subProperty) => {
-              if (
-                subProperty.type === 'Property' &&
-                subProperty.key.type === 'Identifier'
-              ) {
-                propertyNames.push(subProperty.key.name);
-              }
-            });
-          }
-        });
-
-        const sortedParamNames = [...propertyNames].sort();
-
-        if (
-          JSON.stringify(propertyNames) !== JSON.stringify(sortedParamNames)
-        ) {
-          context.report({
-            node,
-            messageId: 'invalidOrder',
-          });
-        }
-      }
-    };
+    const compareNodeListAndReport = createSortReporter(context, ({ loc }) => ({
+      loc,
+      messageId: 'invalidOrder',
+    }));
 
     return {
       ArrowFunctionExpression(node) {
-        checkOrder(node, node.params);
+        const body = getObjectBody(node);
+
+        if (body[0].type === AST_NODE_TYPES.ObjectPattern) {
+          const propertyArray: TSESTree.Property[] = [];
+
+          // Make sure all properties are of type Property and have a key of type Identifier
+          body[0].properties.forEach((subProperty) => {
+            if (
+              subProperty.type === 'Property' &&
+              subProperty.key.type === 'Identifier'
+            ) {
+              propertyArray.push(subProperty);
+            }
+          });
+
+          return compareNodeListAndReport(propertyArray);
+        }
+
+        return null;
       },
     };
   },
 });
-
-// fix(fixer) {
-//   const fixes = sortedParamNames.map((index, paramName) => {
-//     const paramNode = params[index];
-//     // return fixer.replaceText(paramNode, paramName as any);
-//     return fixer.replaceText(paramNode, paramName as any);
-//   });
-
-//   return fixes;
-// },
