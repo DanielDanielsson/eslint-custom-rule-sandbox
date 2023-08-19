@@ -33,6 +33,14 @@ export const MyComponent = ({
   d = 'default',
 }: MyComponentProps) => null;
 
+export const MyComponent2 = (
+  { a = 'sad', b = 'default', c = 'default', d = 'default' },
+  aotherParam: string,
+  sotherParam2: string,
+  gotherParam3: string,
+  { a1 = 'sad', b1 = 'default', c1 = 'default', d1 = 'default' },
+) => null;
+
 // const tempArray = ['a', 'b', 'c', 'd', 'f', 'e', 'g'];
 
 // const fixes = tempArray.map((index, a) => console.log(index, a));

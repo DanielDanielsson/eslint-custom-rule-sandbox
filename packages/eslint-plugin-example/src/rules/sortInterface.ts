@@ -75,7 +75,7 @@ const errorMessages = {
 const meta: RuleMetaData<keyof typeof errorMessages> = {
   type: 'suggestion',
   docs: {
-    description: 'require interface keys to be sorted',
+    description: 'Require interface keys to be sorted alphabetically.',
     recommended: 'recommended',
   },
   messages: errorMessages,

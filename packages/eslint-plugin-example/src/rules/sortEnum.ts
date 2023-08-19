@@ -66,7 +66,7 @@ const defaultOptions: Options = [
 const meta: RuleMetaData<'invalidOrder'> = {
   type: 'suggestion',
   docs: {
-    description: 'require type keys to be sorted',
+    description: 'Require enum string keys to be sorted alphabetically.',
     recommended: 'recommended',
   },
   messages: {

@@ -72,7 +72,8 @@ const defaultOptions: Options = [
 const meta: RuleMetaData<'invalidOrder'> = {
   type: 'suggestion',
   docs: {
-    description: 'require type keys to be sorted',
+    description:
+      'Require props in ArrowFunctionExpression object to be sorted alphabetically.',
     recommended: 'recommended',
   },
   messages: {
@@ -85,7 +86,7 @@ const meta: RuleMetaData<'invalidOrder'> = {
 /**
  * Create the rule.
  */
-export const sortDefaultProps = createRule<'invalidOrder', Options>({
+export const sortArrowFuncObjectParams = createRule<'invalidOrder', Options>({
   name,
   meta,
   defaultOptions,
@@ -100,21 +101,25 @@ export const sortDefaultProps = createRule<'invalidOrder', Options>({
       ArrowFunctionExpression(node) {
         const body = getObjectBody(node);
 
-        if (body[0].type === AST_NODE_TYPES.ObjectPattern) {
-          const propertyArray: TSESTree.Property[] = [];
+        // Sort all objects in the body of the ArrowFunctionExpression
+        body.forEach((subNode) => {
+          if (subNode.type === AST_NODE_TYPES.ObjectPattern) {
+            const propertyArray: TSESTree.Property[] = [];
 
-          // Make sure all properties are of type Property and have a key of type Identifier
-          body[0].properties.forEach((subProperty) => {
-            if (
-              subProperty.type === 'Property' &&
-              subProperty.key.type === 'Identifier'
-            ) {
-              propertyArray.push(subProperty);
-            }
-          });
+            // Make sure all properties are of type Property and have a key of type Identifier
+            subNode.properties.forEach((subProperty) => {
+              if (
+                subProperty.type === 'Property' &&
+                subProperty.key.type === 'Identifier'
+              ) {
+                propertyArray.push(subProperty);
+              }
+            });
 
-          return compareNodeListAndReport(propertyArray);
-        }
+            return compareNodeListAndReport(propertyArray);
+          }
+          return null;
+        });
 
         return null;
       },
