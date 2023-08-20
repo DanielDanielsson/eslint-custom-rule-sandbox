@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
@@ -19,11 +20,22 @@ export enum MyEnum {
   c = 'c',
 }
 
+const foo = () => {
+  console.log('My foo functions');
+};
+
+// foo();
+
 export interface MyComponentProps {
   a?: string;
   b?: string;
   c?: string;
   d?: string;
+}
+
+interface someCoolInterface {
+  a: string;
+  b: string;
 }
 
 export const MyComponent = ({
