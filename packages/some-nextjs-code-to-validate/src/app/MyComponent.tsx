@@ -36,6 +36,8 @@ export interface MyComponentProps {
 interface someCoolInterface {
   a: string;
   b: string;
+  c: string;
+  d: string;
 }
 
 export const MyComponent = ({
