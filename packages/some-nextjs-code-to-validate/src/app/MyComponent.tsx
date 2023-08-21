@@ -37,7 +37,8 @@ interface someCoolInterface {
   a: string;
   b: string;
   c: string;
-  d: string;
+  // this is a comment on A
+  d: string; // this is a comment on C
 }
 
 export const MyComponent = ({
