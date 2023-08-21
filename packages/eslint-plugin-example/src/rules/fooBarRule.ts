@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { TSESLint, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 type MessageIds = 'messageIdForSomeFailure' | 'messageIdForSomeOtherFailure';
@@ -7,7 +8,7 @@ export const fooBarRule: TSESLint.RuleModule<MessageIds> = {
   meta: {
     type: 'suggestion',
     messages: {
-      messageIdForSomeFailure: 'Error message for some failure',
+      messageIdForSomeFailure: 'No foo bar function names allowed!!!!',
       messageIdForSomeOtherFailure: 'Error message for some other failure',
     },
     schema: [], // no options
@@ -19,13 +20,13 @@ export const fooBarRule: TSESLint.RuleModule<MessageIds> = {
       }
 
       if (node.callee.name === 'foo') {
-        context.report({
+        return context.report({
           node: node.callee,
           messageId: 'messageIdForSomeFailure',
         });
       }
       if (node.callee.name === 'bar') {
-        context.report({
+        return context.report({
           node: node.callee,
           messageId: 'messageIdForSomeOtherFailure',
         });
