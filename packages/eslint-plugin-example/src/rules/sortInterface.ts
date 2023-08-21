@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import { JSONSchema4 } from '@typescript-eslint/utils/json-schema';
 
 import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
