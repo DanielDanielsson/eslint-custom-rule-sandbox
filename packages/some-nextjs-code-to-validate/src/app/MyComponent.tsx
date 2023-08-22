@@ -49,7 +49,14 @@ export const MyComponent = ({
 }: MyComponentProps) => null;
 
 export const MyComponent2 = (
-  { a = 'sad', b = 'default', c = 'default', d = 'default' },
+  {
+    b = 'default',
+    a = 'sad',
+    d = 'default',
+    c = 'default',
+    e = 'default',
+    f = 'default',
+  },
   aotherParam: string,
   sotherParam2: string,
   gotherParam3: string,

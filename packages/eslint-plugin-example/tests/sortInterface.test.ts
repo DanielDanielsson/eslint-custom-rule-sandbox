@@ -54,5 +54,18 @@ ruleTester.run('sort-interface', sortInterface as any, {
         c: string;
       }`,
     },
+    {
+      code: noFormat`interface FooBarWithComment {
+        b: string; // comment on b
+        a: string;
+        c: string;
+      }`,
+      errors: [{ messageId: 'invalidOrder' }],
+      output: noFormat`interface Foo {
+        a: string;
+        b: string; // comment on b
+        c: string;
+      }`,
+    },
   ],
 });
