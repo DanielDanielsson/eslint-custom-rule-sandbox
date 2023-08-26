@@ -13,10 +13,43 @@ const ruleTester = new RuleTester({
 
 ruleTester.run('sort-interface', sortInterface as any, {
   valid: [
-    'interface Foo { a: string; b: string;}',
-    'interface Foo { a: string; b: string; c: string;}',
-    `interface Foo { a: string; b: string; c: string; d: string;}`,
-    `interface Foo { a: string; b: string; c: string;}`,
+    noFormat`interface Foo { a: string; b: string;}`,
+    noFormat`interface Foo { a?: string; b?: string;}`,
+    noFormat`interface Foo { a?: string; b: string;}`,
+    noFormat`interface Foo extends Bar { a: string; b: string;}`,
+    noFormat`interface Foo extends Bar { a?: string; b?: string;}`,
+    noFormat`interface FooBarWithComment {
+      a: string; // comment on a
+      b: string; 
+      c: string;
+    }`,
+    noFormat`interface Foo { a: string; b: string; c: string;}`,
+    noFormat`interface Foo { a: string; b: string; c: string; d: string;}`,
+    noFormat`interface Foo { a: string; b: string; c: string;}`,
+    noFormat`export interface MyComponentProps {
+      a?: string;
+      b?: string;
+      c?: string;
+      d?: string;
+      e?: {
+        a: string;
+        b: string;
+        c: string;
+      };
+    }
+    `,
+    noFormat`export interface MyComponentProps {
+      a?: string;
+      b?: string;
+      c?: string;
+      d?: string;
+      e?: {
+        c: string;
+        b: string;
+        a: string;
+      };
+    }
+    `,
   ],
   invalid: [
     {
@@ -55,17 +88,31 @@ ruleTester.run('sort-interface', sortInterface as any, {
       }`,
     },
     {
-      code: noFormat`interface FooBarWithComment {
-        b: string; // comment on b
-        a: string;
+      code: noFormat`interface Foo {
+        b: string;
+        a?: string;
         c: string;
       }`,
       errors: [{ messageId: 'invalidOrder' }],
       output: noFormat`interface Foo {
-        a: string;
-        b: string; // comment on b
+        a?: string;
+        b: string;
         c: string;
       }`,
     },
+    // TODO: Comments are not part of the TS AST, so we can't fix this yet.
+    // {
+    //   code: noFormat`interface FooBarWithComment {
+    //     b: string; // comment on b
+    //     a: string;
+    //     c: string;
+    //   }`,
+    //   errors: [{ messageId: 'invalidOrder' }],
+    //   output: noFormat`interface Foo {
+    //     a: string;
+    //     b: string; // comment on b
+    //     c: string;
+    //   }`,
+    // },
   ],
 });

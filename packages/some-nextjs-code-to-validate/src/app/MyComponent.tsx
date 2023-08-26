@@ -31,6 +31,15 @@ export interface MyComponentProps {
   b?: string;
   c?: string;
   d?: string;
+  e?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+    e: string;
+    f: string;
+    g: string;
+  };
 }
 
 interface someCoolInterface {
@@ -46,14 +55,23 @@ export const MyComponent = ({
   b = 'default',
   c = 'default',
   d = 'default',
+  e = {
+    a: 'default',
+    b: 'default',
+    c: 'default',
+    d: 'default',
+    e: 'default',
+    f: 'default',
+    g: 'default',
+  },
 }: MyComponentProps) => null;
 
 export const MyComponent2 = (
   {
-    b = 'default',
     a = 'sad',
-    d = 'default',
+    b = 'default',
     c = 'default',
+    d = 'default',
     e = 'default',
     f = 'default',
   },
