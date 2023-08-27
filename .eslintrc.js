@@ -4,7 +4,9 @@ module.exports = {
   plugins: ['example'],
   rules: {
     'example/foo-bar-rule': 'error',
+    // 'example/sort-interface': ['error', "desc"],
     'example/sort-interface': 'error',
+    
     'example/sort-type': 'error',
     'example/sort-enum': 'error',
     'example/sort-arrowfunc-object-params': 'error',
