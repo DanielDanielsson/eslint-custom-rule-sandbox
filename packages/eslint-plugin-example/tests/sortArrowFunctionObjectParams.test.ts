@@ -18,6 +18,10 @@ ruleTester.run('sort-interface', sortArrowFuncObjectParams as any, {
         c = 'default',
         d = 'default',
       }: MyComponentProps) => null;`,
+    noFormat`export const MyComponent = ({
+        a = 'default',
+        b = 'default',
+      }) => null;`,
   ],
   invalid: [
     {
@@ -33,6 +37,40 @@ ruleTester.run('sort-interface', sortArrowFuncObjectParams as any, {
           b = 'default',
           c = 'default',
           d = 'default',
+        }: MyComponentProps) => null;`,
+    },
+    {
+      code: noFormat`export const MyComponent = ({
+          b = 'default',
+          a = 'default',
+          c = 'default',
+          d = 'default',
+          ...rest,
+        }: MyComponentProps) => null;`,
+      errors: [{ messageId: 'invalidOrder' }],
+      output: noFormat`export const MyComponent = ({
+          a = 'default',
+          b = 'default',
+          c = 'default',
+          d = 'default',
+          ...rest,
+        }: MyComponentProps) => null;`,
+    },
+    {
+      code: noFormat`export const MyComponent = ({
+          a = 'default',
+          b = 'default',
+          d = 'default',
+          c = 'default',
+          ...rest,
+        }: MyComponentProps) => null;`,
+      errors: [{ messageId: 'invalidOrder' }],
+      output: noFormat`export const MyComponent = ({
+          a = 'default',
+          b = 'default',
+          c = 'default',
+          d = 'default',
+          ...rest,
         }: MyComponentProps) => null;`,
     },
   ],

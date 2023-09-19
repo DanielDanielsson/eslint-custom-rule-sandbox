@@ -77,7 +77,7 @@ const meta: RuleMetaData<'invalidOrder'> = {
     recommended: 'recommended',
   },
   messages: {
-    invalidOrder: ErrorMessage.DefaultPropsInvalidOrder,
+    invalidOrder: ErrorMessage.ArrowFuncObjectPropsOrder,
   },
   fixable: 'code',
   schema,
@@ -104,7 +104,9 @@ export const sortArrowFuncObjectParams = createRule<'invalidOrder', Options>({
         // Sort all objects in the body of the ArrowFunctionExpression
         body.forEach((subNode) => {
           if (subNode.type === AST_NODE_TYPES.ObjectPattern) {
-            const propertyArray: TSESTree.Property[] = [];
+            const propertyArray: Array<
+              TSESTree.Property | TSESTree.RestElement
+            > = [];
 
             // Make sure all properties are of type Property and have a key of type Identifier
             subNode.properties.forEach((subProperty) => {
@@ -112,6 +114,8 @@ export const sortArrowFuncObjectParams = createRule<'invalidOrder', Options>({
                 subProperty.type === 'Property' &&
                 subProperty.key.type === 'Identifier'
               ) {
+                propertyArray.push(subProperty);
+              } else if (subProperty.type === 'RestElement') {
                 propertyArray.push(subProperty);
               }
             });
