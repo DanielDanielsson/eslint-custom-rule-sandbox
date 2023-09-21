@@ -91,7 +91,6 @@ export const MyComponent2 = (
 ) => null;
 
 // Component with rest prop:
-
 export const MyComponent3 = ({
   a = 'default',
   b = 'default',
